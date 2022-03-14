@@ -51,7 +51,7 @@ public class RoleMessage extends SimpleCommand {
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var label = event.getSubcommandName();
         if ("add".equals(label)) {
-            context.conversationService().startDialog(event.getUser(), event.getTextChannel(),
+            context.startDialog(event,
                     ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
                         var duration = Duration.ofDays(event.getOption("days", 0, OptionMapping::getAsInt));
                         duration = duration.plus(event.getOption("hours", 0, OptionMapping::getAsInt), ChronoUnit.HOURS);
@@ -84,8 +84,7 @@ public class RoleMessage extends SimpleCommand {
                 return;
             }
 
-            context.conversationService().startDialog(event.getUser(), event.getTextChannel(),
-                    ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
+            context.startDialog(event, ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
                         message.get().message(conversationContext.getContentRaw());
                         configuration.saveConfig();
                         return Result.finish();

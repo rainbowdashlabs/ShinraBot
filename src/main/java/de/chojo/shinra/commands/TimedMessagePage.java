@@ -23,9 +23,9 @@ public class TimedMessagePage extends ListPageBag<TimedMessage> {
     @Override
     public CompletableFuture<MessageEmbed> buildPage() {
         return CompletableFuture.supplyAsync(() -> new EmbedBuilder()
-                .setTitle(current() + " | ")
+                .setTitle("#" + current())
                 .setDescription(currentElement().message())
-                .addField("Duration", currentElement().prettyDelay(), false)
+                .addField("Duration", currentElement().prettyDelay(), true)
                 .build());
     }
 }
