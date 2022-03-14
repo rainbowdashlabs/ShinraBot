@@ -25,15 +25,12 @@ dependencies {
     }
 
     implementation("org.xerial", "sqlite-jdbc", "3.36.0.3")
-    implementation("de.chojo", "cjda-util", "2.1.1g+alpha.9-SNAPSHOT")
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.13.2")
     // database
-    implementation("org.postgresql", "postgresql", "42.3.1")
-    implementation("com.zaxxer", "HikariCP", "4.0.3")
+    implementation("de.chojo", "sql-util", "1.1.6")
+    implementation("de.chojo", "cjda-util", "2.1.1g+alpha.9-SNAPSHOT")
 
     // utils
-    implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.1.6")
     implementation("com.google.guava", "guava", "30.1.1-jre")
 
     // Logging

@@ -20,9 +20,11 @@ import de.chojo.shinra.worker.EventWorker;
 import de.chojo.sqlutil.logging.LoggerAdapter;
 import de.chojo.sqlutil.updater.SqlType;
 import de.chojo.sqlutil.updater.SqlUpdater;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
@@ -65,12 +67,17 @@ public class ShinraBot {
         var eventData = new EventData(dataSource);
 
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.general().token())
-                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES)
                 .enableCache(CacheFlag.MEMBER_OVERRIDES)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .build();
         var evenWorker = EventWorker.create(eventData, shardManager, configuration, Executors.newSingleThreadScheduledExecutor());
 
         shardManager.addEventListener(new StateListener(configuration, eventData, evenWorker));
+
+        for (var guild : shardManager.getGuilds()) {
+            guild.loadMembers();
+        }
 
         var pageService = PageService.builder(shardManager)
                 .build();

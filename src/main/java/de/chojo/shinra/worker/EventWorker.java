@@ -11,18 +11,20 @@ import de.chojo.shinra.configuration.elements.messages.TimedMessage;
 import de.chojo.shinra.configuration.elements.messages.TimedRoleMessage;
 import de.chojo.shinra.data.EventData;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.slf4j.Logger;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class EventWorker implements Runnable {
     private final EventData data;
     private final ShardManager shardManager;
     private final Configuration configuration;
+    private static final Logger log = getLogger(EventWorker.class);
 
     public EventWorker(EventData data, ShardManager shardManager, Configuration configuration) {
         this.data = data;
@@ -45,6 +47,9 @@ public class EventWorker implements Runnable {
                 sendEvent(event.userId(), timedMessage.get());
                 data.deleteEvent(event);
             }
+        }).exceptionally(err -> {
+            log.error("Something went wrong", err);
+            return null;
         });
     }
 
@@ -54,21 +59,19 @@ public class EventWorker implements Runnable {
                 sendMessage(user, message);
                 return;
             }
-            var mutual = shardManager.getMutualGuilds(user);
-            if (mutual.isEmpty()) return;
-            mutual.get(0).retrieveMember(user).queue(mem -> {
+            shardManager.getGuilds().get(0).retrieveMember(user).queue(mem -> {
                 if (mem.getRoles().stream().anyMatch(r -> roleMessage.roleId() == r.getIdLong())) {
                     sendMessage(user, message);
                 }
-            });
-        }, err -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_USER));
+            }, err -> log.error("Could not retrieve member", err));
+        }, err -> log.error("Could not send message.", err));
     }
 
     private void sendMessage(User user, TimedMessage message) {
         user.openPrivateChannel().queue(channel -> {
             channel.sendMessage(message.message())
                     .queue(RestAction.getDefaultSuccess(),
-                            err -> ErrorResponseException.ignore(ErrorResponse.CANNOT_SEND_TO_USER));
+                            err -> log.error("Could not send message.", err));
         });
     }
 }
