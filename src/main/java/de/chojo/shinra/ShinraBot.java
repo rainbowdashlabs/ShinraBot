@@ -7,8 +7,11 @@
 package de.chojo.shinra;
 
 import de.chojo.jdautil.command.dispatching.CommandHub;
+import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Language;
 import de.chojo.jdautil.pagination.PageService;
 import de.chojo.shinra.commands.RoleMessage;
+import de.chojo.shinra.commands.TimedMessage;
 import de.chojo.shinra.configuration.Configuration;
 import de.chojo.shinra.data.EventData;
 import de.chojo.shinra.data.SqLiteData;
@@ -17,7 +20,6 @@ import de.chojo.shinra.worker.EventWorker;
 import de.chojo.sqlutil.logging.LoggerAdapter;
 import de.chojo.sqlutil.updater.SqlType;
 import de.chojo.sqlutil.updater.SqlUpdater;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -65,21 +67,24 @@ public class ShinraBot {
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.general().token())
                 .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES)
                 .enableCache(CacheFlag.MEMBER_OVERRIDES)
-                .addEventListeners(new StateListener(configuration, eventData))
                 .build();
+        var evenWorker = EventWorker.create(eventData, shardManager, configuration, Executors.newSingleThreadScheduledExecutor());
+
+        shardManager.addEventListener(new StateListener(configuration, eventData, evenWorker));
 
         var pageService = PageService.builder(shardManager)
-                        .build();
+                .build();
 
-        EventWorker.create(eventData, shardManager, configuration, Executors.newSingleThreadScheduledExecutor());
+
+        var localizer = Localizer.builder(Language.ENGLISH).build();
 
         CommandHub.builder(shardManager)
-                .withPermissionCheck((event, simpleCommand) -> {
-                    if (simpleCommand.permission() == Permission.UNKNOWN) return true;
-                    return configuration.general().botOwner().contains(event.getUser().getIdLong());
-                }).useGuildCommands()
-                .withCommands(new RoleMessage(pageService, configuration))
+                .withPermissionCheck((event, simpleCommand) -> false)
+                .useGuildCommands()
+                .withCommands(new RoleMessage(pageService, configuration), new TimedMessage(pageService, configuration))
                 .withConversationSystem()
+                .withLocalizer(localizer)
+                .withManagerRole(guild -> configuration.general().botOwnerRoles())
                 .build();
     }
 }

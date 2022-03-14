@@ -24,10 +24,10 @@ public class RoleMessagePage extends ListPageBag<TimedRoleMessage> {
     @Override
     public CompletableFuture<MessageEmbed> buildPage() {
         return CompletableFuture.supplyAsync(() -> new EmbedBuilder()
-                .setTitle(current() + " | ")
+                .setTitle("#" + current())
                 .setDescription(currentElement().message())
-                .addField("Role", MentionUtil.role(currentElement().roleId()), false)
-                .addField("Duration", currentElement().prettyDelay(), false)
+                .addField("Role", MentionUtil.role(currentElement().roleId()), true)
+                .addField("Duration", currentElement().prettyDelay(), true)
                 .build());
     }
 }

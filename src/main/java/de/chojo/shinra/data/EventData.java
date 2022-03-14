@@ -17,13 +17,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class EventData extends QueryFactoryHolder {
-    /**
-     * Create a new QueryFactoryholder
-     *
-     * @param dataSource datasource
-     */
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     public EventData(DataSource dataSource) {
         super(dataSource, QueryBuilderConfig.builder().build());
     }
@@ -35,15 +34,15 @@ public class EventData extends QueryFactoryHolder {
                         .setLong(LocalDateTime.now().plus(message.delay().toSeconds(), ChronoUnit.SECONDS).toEpochSecond(ZoneOffset.UTC))
                         .setLong(member.getIdLong()))
                 .insert()
-                .execute();
+                .execute(executorService);
     }
 
-    public List<EventEntry> getExpiredEvents() {
+    public CompletableFuture<List<EventEntry>> getExpiredEvents() {
         return builder(EventEntry.class)
                 .query("SELECT id, message_id, user_id FROM events WHERE send_after < ?")
                 .paramsBuilder(paramBuilder -> paramBuilder.setLong(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)))
                 .readRow(r -> new EventEntry(r.getInt("id"), r.getInt("message_id"), r.getLong("user_id")))
-                .allSync();
+                .all(executorService);
     }
 
     public void deleteEvent(EventEntry eventEntry) {
@@ -51,6 +50,6 @@ public class EventData extends QueryFactoryHolder {
                 .query("DELETE FROM events WHERE id = ?")
                 .paramsBuilder(paramBuilder -> paramBuilder.setInt(eventEntry.id()))
                 .delete()
-                .execute();
+                .execute(executorService);
     }
 }

@@ -49,17 +49,19 @@ public class TimedMessage extends SimpleCommand {
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var label = event.getSubcommandName();
         if ("add".equals(label)) {
-            context.conversationService().startDialog(event.getUser(), event.getTextChannel(),
-                    ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
-                        var duration = Duration.ofDays(event.getOption("days", 0, OptionMapping::getAsInt));
-                        duration = duration.plus(event.getOption("hours", 0, OptionMapping::getAsInt), ChronoUnit.HOURS);
-                        duration = duration.plus(event.getOption("minutes", 0, OptionMapping::getAsInt), ChronoUnit.MINUTES);
-                        var message = new de.chojo.shinra.configuration.elements.messages.TimedMessage(duration, conversationContext.getContentRaw());
-                        configuration.autoMessages().registerTimedMessage(message);
-                        conversationContext.getContentRaw();
-                        configuration.saveConfig();
-                        return Result.finish();
-                    }).build()).build());
+            context.conversationService().startDialog(event,
+                    ConversationBuilder.builder(
+                                    Step.message("Please enter the text", conversationContext -> {
+                                        var duration = Duration.ofDays(event.getOption("days", 0, OptionMapping::getAsInt));
+                                        duration = duration.plus(event.getOption("hours", 0, OptionMapping::getAsInt), ChronoUnit.HOURS);
+                                        duration = duration.plus(event.getOption("minutes", 0, OptionMapping::getAsInt), ChronoUnit.MINUTES);
+                                        var message = new de.chojo.shinra.configuration.elements.messages.TimedMessage(duration, conversationContext.getContentRaw());
+                                        configuration.autoMessages().registerTimedMessage(message);
+                                        conversationContext.getContentRaw();
+                                        configuration.saveConfig();
+                                        return Result.finish();
+                                    }).build())
+                            .build());
             return;
         }
 
