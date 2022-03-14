@@ -7,6 +7,8 @@
 package de.chojo.shinra;
 
 import de.chojo.jdautil.command.dispatching.CommandHub;
+import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Language;
 import de.chojo.jdautil.pagination.PageService;
 import de.chojo.shinra.commands.RoleMessage;
 import de.chojo.shinra.configuration.Configuration;
@@ -73,13 +75,16 @@ public class ShinraBot {
 
         EventWorker.create(eventData, shardManager, configuration, Executors.newSingleThreadScheduledExecutor());
 
+        var localizer = Localizer.builder(Language.ENGLISH).build();
+
         CommandHub.builder(shardManager)
                 .withPermissionCheck((event, simpleCommand) -> {
-                    if (simpleCommand.permission() == Permission.UNKNOWN) return true;
+                    //if (simpleCommand.permission() == Permission.UNKNOWN) return true;
                     return configuration.general().botOwner().contains(event.getUser().getIdLong());
                 }).useGuildCommands()
                 .withCommands(new RoleMessage(pageService, configuration))
                 .withConversationSystem()
+                .withLocalizer(localizer)
                 .build();
     }
 }
