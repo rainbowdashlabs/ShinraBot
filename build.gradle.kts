@@ -27,7 +27,7 @@ dependencies {
     implementation("org.xerial", "sqlite-jdbc", "3.36.0.3")
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.13.2")
     // database
-    implementation("de.chojo", "sql-util", "1.1.6")
+    implementation("de.chojo", "sql-util", "1.2.1")
     implementation("de.chojo", "cjda-util", "2.1.1g+alpha.9-SNAPSHOT")
 
     // utils
