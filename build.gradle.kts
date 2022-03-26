@@ -31,7 +31,7 @@ dependencies {
     implementation("de.chojo", "cjda-util", "2.1.1g+alpha.9-SNAPSHOT")
 
     // utils
-    implementation("com.google.guava", "guava", "30.1.1-jre")
+    implementation("com.google.guava", "guava", "31.1-jre")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
