@@ -20,7 +20,7 @@ license {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.9") {
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.11") {
         exclude(module = "opus-java")
     }
 
