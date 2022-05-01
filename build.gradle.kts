@@ -19,19 +19,15 @@ license {
 }
 
 dependencies {
-    // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.9") {
-        exclude(module = "opus-java")
-    }
-
     implementation("org.xerial", "sqlite-jdbc", "3.36.0.3")
-    implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.13.2")
+
     // database
     implementation("de.chojo", "sql-util", "1.2.1")
-    implementation("de.chojo", "cjda-util", "2.1.1g+alpha.9-SNAPSHOT")
+    implementation("de.chojo", "cjda-util", "2.4.0+alpha.11")
 
     // utils
     implementation("com.google.guava", "guava", "31.1-jre")
+    implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.13.2")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")

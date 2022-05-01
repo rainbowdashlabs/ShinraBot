@@ -91,7 +91,6 @@ public class ShinraBot {
                 .withCommands(new RoleMessage(pageService, configuration), new TimedMessage(pageService, configuration))
                 .withConversationSystem()
                 .withLocalizer(localizer)
-                .withManagerRole(guild -> configuration.general().botOwnerRoles())
                 .build();
     }
 }

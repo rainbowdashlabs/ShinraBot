@@ -6,6 +6,8 @@
 
 package de.chojo.shinra.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.conversation.builder.ConversationBuilder;
 import de.chojo.jdautil.conversation.elements.Result;
@@ -26,21 +28,19 @@ public class TimedMessage extends SimpleCommand {
     private final Configuration configuration;
 
     public TimedMessage(PageService pageService, Configuration configuration) {
-        super("timedmessage", null, "Add timed messages", subCommandBuilder()
-                        .add("add", "Add a timed message", argsBuilder()
-                                .add(OptionType.INTEGER, "minutes", "minutes")
-                                .add(OptionType.INTEGER, "hours", "hours")
-                                .add(OptionType.INTEGER, "days", "days")
-                                .build())
-                        .add("remove", "Remove a timed message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id", a -> a.asRequired()).build())
-                        .add("edit", "Edit a timed message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id", a -> a.asRequired()).build())
-                        .add("list", "List a timed message")
-                        .add("show", "Show a timed message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id").build())
-                        .build(),
-                Permission.UNKNOWN);
+        super(CommandMeta.builder("timedmessage", "Add timed messages")
+                .addSubCommand("add", "Add a timed message", argsBuilder()
+                        .add(SimpleArgument.integer("minutes", "minutes"))
+                        .add(SimpleArgument.integer("hours", "hours"))
+                        .add(SimpleArgument.integer("days", "days")))
+                .addSubCommand("remove", "Remove a timed message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id").asRequired()))
+                .addSubCommand("edit", "Edit a timed message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id").asRequired()))
+                .addSubCommand("list", "List a timed message")
+                .addSubCommand("show", "Show a timed message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id")))
+                .withPermission());
         this.pageService = pageService;
         this.configuration = configuration;
     }

@@ -6,6 +6,8 @@
 
 package de.chojo.shinra.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.conversation.builder.ConversationBuilder;
 import de.chojo.jdautil.conversation.elements.Result;
@@ -27,22 +29,20 @@ public class RoleMessage extends SimpleCommand {
     private final Configuration configuration;
 
     public RoleMessage(PageService pageService, Configuration configuration) {
-        super("rolemessage", null, "Add role messages", subCommandBuilder()
-                        .add("add", "Add a role message", argsBuilder()
-                                .add(OptionType.ROLE, "role", "the role", a -> a.asRequired())
-                                .add(OptionType.INTEGER, "minutes", "minutes")
-                                .add(OptionType.INTEGER, "hours", "hours")
-                                .add(OptionType.INTEGER, "days", "days")
-                                .build())
-                        .add("remove", "Remove a role message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id", a -> a.asRequired()).build())
-                        .add("edit", "Edit a role message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id", a -> a.asRequired()).build())
-                        .add("list", "List a role message")
-                        .add("show", "Show a role message", argsBuilder()
-                                .add(OptionType.INTEGER, "id", "id").build())
-                        .build(),
-                Permission.UNKNOWN);
+        super(CommandMeta.builder("rolemessage", "Add role messages")
+                        .addSubCommand("add", "Add a role message", argsBuilder()
+                                .add(SimpleArgument.role("role", "the role").asRequired())
+                                .add(SimpleArgument.integer("minutes", "minutes"))
+                                .add(SimpleArgument.integer("hours", "hours"))
+                                .add(SimpleArgument.integer("days", "days")))
+                .addSubCommand("remove", "Remove a role message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id").asRequired()))
+                .addSubCommand("edit", "Edit a role message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id").asRequired()))
+                .addSubCommand("list", "List a role message")
+                .addSubCommand("show", "Show a role message", argsBuilder()
+                        .add(SimpleArgument.integer("id", "id")))
+                .withPermission());
         this.pageService = pageService;
         this.configuration = configuration;
     }
@@ -51,7 +51,7 @@ public class RoleMessage extends SimpleCommand {
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var label = event.getSubcommandName();
         if ("add".equals(label)) {
-            context.startDialog(event,
+            context.startDialog(
                     ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
                         var duration = Duration.ofDays(event.getOption("days", 0, OptionMapping::getAsInt));
                         duration = duration.plus(event.getOption("hours", 0, OptionMapping::getAsInt), ChronoUnit.HOURS);
@@ -84,7 +84,7 @@ public class RoleMessage extends SimpleCommand {
                 return;
             }
 
-            context.startDialog(event, ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
+            context.startDialog(ConversationBuilder.builder(Step.message("Please enter the text", conversationContext -> {
                         message.get().message(conversationContext.getContentRaw());
                         configuration.saveConfig();
                         return Result.finish();

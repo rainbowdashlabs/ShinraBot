@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.shinra.configuration.elements.AutoMessages;
 import de.chojo.shinra.configuration.elements.General;
@@ -31,12 +32,13 @@ public class Configuration {
     private ConfigFile configFile;
 
     private Configuration() {
-        objectMapper = new ObjectMapper()
+        objectMapper = JsonMapper.builder()
+                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                .build()
                 .registerModule(new JavaTimeModule())
                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
-                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
-                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
+                .setDefaultPrettyPrinter(new DefaultPrettyPrinter());
     }
 
     public static Configuration create() {
