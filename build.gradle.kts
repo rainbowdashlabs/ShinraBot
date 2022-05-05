@@ -22,7 +22,7 @@ dependencies {
     implementation("org.xerial", "sqlite-jdbc", "3.36.0.3")
 
     // database
-    implementation("de.chojo", "sql-util", "1.2.1")
+    implementation("de.chojo", "sql-util", "1.4.0")
     implementation("de.chojo", "cjda-util", "2.4.0+alpha.11")
 
     // utils
