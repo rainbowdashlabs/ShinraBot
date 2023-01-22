@@ -19,7 +19,7 @@ license {
 }
 
 dependencies {
-    implementation("org.xerial", "sqlite-jdbc", "3.39.4.1")
+    implementation("org.xerial", "sqlite-jdbc", "3.40.0.0")
 
     // database
     implementation("de.chojo", "sql-util", "1.5.0")
