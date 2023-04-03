@@ -90,7 +90,7 @@ public class Configuration {
 
     private Path getConfig() {
         var home = new File(".").getAbsoluteFile().getParentFile().toPath();
-        var property = System.getProperty("bot.config");
+        var property = System.getProperty("bot.config", "config/config.json");
         if (property == null) {
             log.error("bot.config property is not set.");
             throw new ConfigurationException("Property -Dbot.config=<config path> is not set.");

@@ -18,6 +18,12 @@ license {
     include("**/*.java")
 }
 
+java{
+    toolchain{
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 dependencies {
     implementation("org.xerial", "sqlite-jdbc", "3.41.2.1")
 
