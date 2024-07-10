@@ -29,7 +29,7 @@ dependencies {
 
     // database
     implementation("de.chojo", "sql-util", "1.5.0")
-    implementation("de.chojo", "cjda-util", "2.4.0+alpha.11")
+    implementation("de.chojo", "cjda-util", "2.9.8+jda-5.0.0")
 
     // utils
     implementation("com.google.guava", "guava", "33.2.1-jre")
