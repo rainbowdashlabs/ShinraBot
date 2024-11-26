@@ -25,7 +25,7 @@ java{
 }
 
 dependencies {
-    implementation("org.xerial", "sqlite-jdbc", "3.47.0.0")
+    implementation("org.xerial", "sqlite-jdbc", "3.47.1.0")
 
     // database
     implementation("de.chojo", "sql-util", "1.5.0")
