@@ -36,7 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.18.2")
 
     // Logging
-    implementation("org.slf4j", "slf4j-api", "2.0.16")
+    implementation("org.slf4j", "slf4j-api", "2.0.17")
     implementation("org.apache.logging.log4j", "log4j-core", "2.24.3")
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.24.3")
     implementation("club.minnced", "discord-webhooks", "0.8.4")
