@@ -37,8 +37,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "2.0.17")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.25.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.25.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.25.1")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.25.1")
     implementation("club.minnced", "discord-webhooks", "0.8.4")
 
     // unit testing
