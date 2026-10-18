@@ -33,7 +33,7 @@ dependencies {
 
     // utils
     implementation("com.google.guava", "guava", "33.7.2-jre")
-    implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.22.3")
+    implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.22.4")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "2.0.20")
