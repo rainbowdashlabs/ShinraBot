@@ -32,7 +32,7 @@ dependencies {
     implementation("de.chojo", "cjda-util", "2.15.0+jda-6.3.0")
 
     // utils
-    implementation("com.google.guava", "guava", "33.7.2-jre")
+    implementation("com.google.guava", "guava", "33.8.0-jre")
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", "2.22.4")
 
     // Logging
